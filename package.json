@@ -1,8 +1,8 @@
 {
   "name": "aws-app-runner-private-service-with-private-integration",
   "version": "1.0.0",
-  "description": "## Demo",
-  "main": "server.js",
+  "description": "aws-app-runner-private-service-with-private-integration",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "echo \"no build specified\" && exit 0",
