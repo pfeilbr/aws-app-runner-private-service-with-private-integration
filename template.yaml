@@ -68,7 +68,7 @@ Resources:
       ServiceArn: !GetAtt "AppRunnerService1.ServiceArn"
       VpcIngressConnectionName: "service-1-private-ingress-connection"
 
-  AAppRunnerCodeBasedService1VpcIngressConnection:
+  AppRunnerCodeBasedService1VpcIngressConnection:
     Type: AWS::AppRunner::VpcIngressConnection
     Properties:
       IngressVpcConfiguration:
@@ -131,7 +131,7 @@ Resources:
           RepositoryUrl: https://github.com/pfeilbr/aws-app-runner-private-service-with-private-integration
           SourceCodeVersion:
             Type: BRANCH
-            Value: main
+            Value: master
           CodeConfiguration:
             ConfigurationSource: REPOSITORY
           # CodeConfigurationValues:
@@ -232,6 +232,10 @@ Outputs:
   AppRunnerService1Url:
     Description: private-endpoint-1-url
     Value: !Sub https://${AppRunnerService1VpcIngressConnection.DomainName}
+
+  AppRunnerCodeBasedService1Url:
+    Description: code-based-private-endpoint-1-url
+    Value: !Sub https://${AppRunnerCodeBasedService1VpcIngressConnection.DomainName}
 
   TestApiUrl:
     Description: "API endpoint URL"
