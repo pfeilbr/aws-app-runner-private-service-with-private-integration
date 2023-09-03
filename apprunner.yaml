@@ -5,4 +5,11 @@ build:
     build:
       - npm install
 run:
+  runtime-version: 12.21.0
   command: npm start
+  network:
+    port: 8000
+    env: APP_PORT
+  env:
+    - name: MY_VAR_EXAMPLE
+      value: "example"  
