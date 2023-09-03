@@ -1,0 +1,32 @@
+[
+    {
+        "OutputKey": "AppRunnerService1Url",
+        "OutputValue": "https://zbz6kpdkxx.us-east-1.awsapprunner.com",
+        "Description": "private-endpoint-1-url"
+    },
+    {
+        "OutputKey": "AppRunnerPrivateEndpointDnsEntries",
+        "OutputValue": "Z7HUB22UULQXV:vpce-0fc88055b4e48aaa9-0cqoi6ny.requests.apprunner.us-east-1.vpce.amazonaws.com,Z7HUB22UULQXV:vpce-0fc88055b4e48aaa9-0cqoi6ny-us-east-1a.requests.apprunner.us-east-1.vpce.amazonaws.com,Z7HUB22UULQXV:vpce-0fc88055b4e48aaa9-0cqoi6ny-us-east-1e.requests.apprunner.us-east-1.vpce.amazonaws.com",
+        "Description": "The DNS entries for the endpoint. Each entry is a combination of the hosted zone ID and the DNS name. The entries are ordered as follows: regional public DNS, zonal public DNS, private DNS, and wildcard DNS. This order is not enforced for AWS Marketplace services."
+    },
+    {
+        "OutputKey": "MyPrivateS3Bucket",
+        "OutputValue": "aws-app-runner-private-service-with-private-integration",
+        "Description": "API Gateway endpoint URL for Prod stage for Hello World function"
+    },
+    {
+        "OutputKey": "TestApiUrl",
+        "OutputValue": "https://r4d8inqs3m.execute-api.us-east-1.amazonaws.com/Prod/test",
+        "Description": "API endpoint URL"
+    },
+    {
+        "OutputKey": "AppRunnerPrivateEndpointNetworkInterfaceIds",
+        "OutputValue": "eni-0272a7d9b676aae41,eni-0ea5d7b799ccd0fae",
+        "Description": "API Gateway endpoint URL for Prod stage for Hello World function"
+    },
+    {
+        "OutputKey": "AppRunnerPrivateEndpointId",
+        "OutputValue": "vpce-0fc88055b4e48aaa9",
+        "Description": "API Gateway endpoint URL for Prod stage for Hello World function"
+    }
+]

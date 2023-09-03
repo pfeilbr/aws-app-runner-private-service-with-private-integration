@@ -1,0 +1,207 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  aws-app-runner-private-service-with-private-integration
+
+  Sample SAM Template for aws-app-runner-private-service-with-private-integration
+
+Parameters:
+  PrivateVpcId:
+    Description: The VPC ID that this stack will be launched in
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-082f2ef872e986a9a
+
+  SubnetIds:
+    Description: Comma-delimited list of Subnet IDs
+    Type: CommaDelimitedList
+    Default: "subnet-0bcedaf63a72b80d3,subnet-01631f38363b29389" # Replace with your default Subnet IDs
+
+  DefaultSecurityGroupId:
+    Description: The default Security Group ID
+    Type: AWS::EC2::SecurityGroup::Id
+    Default: sg-012ca0fab7b700e95
+
+
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 128
+
+Resources:
+
+  #Private endpoint creation
+  AppRunnerPrivateEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      PrivateDnsEnabled: false
+      SecurityGroupIds:
+        - !Ref DefaultSecurityGroupId
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.apprunner.requests"
+      PolicyDocument: |
+        {
+          "Statement": [
+            {
+              "Action": "*", 
+              "Effect": "Allow", 
+              "Principal": "*", 
+              "Resource": "*"
+            }
+          ]
+        }
+      SubnetIds: !Ref SubnetIds
+      VpcEndpointType: Interface
+      VpcId: !Ref PrivateVpcId
+
+  #VPC Ingress Connection creation
+  AppRunnerService1VpcIngressConnection:
+    Type: AWS::AppRunner::VpcIngressConnection
+    Properties:
+      IngressVpcConfiguration:
+        VpcEndpointId: !Ref AppRunnerPrivateEndpoint
+        VpcId: !Ref PrivateVpcId
+      ServiceArn: !GetAtt "AppRunnerService1.ServiceArn"
+      VpcIngressConnectionName: "service-1-private-ingress-connection"
+
+  #VPC Egress Connection creation
+  AppRunnerServiceConnector:
+    Type: AWS::AppRunner::VpcConnector
+    Properties:
+      SecurityGroups:
+        - !Ref DefaultSecurityGroupId
+      Subnets: !Ref SubnetIds
+      VpcConnectorName: "vpc-connector-apprunner"
+
+  #App Runner service creation
+  AppRunnerService1:
+    Type: "AWS::AppRunner::Service"
+    Properties:
+      ServiceName: "private-endpoint-1"
+      SourceConfiguration:
+        ImageRepository:
+          ImageIdentifier: "public.ecr.aws/t5g2h6o3/arta:latest"
+          ImageConfiguration:
+            Port: "8000"
+            RuntimeEnvironmentVariables:
+              - Name: "ENVIRONMENT"
+                Value: "1"
+          ImageRepositoryType: "ECR_PUBLIC"
+        AutoDeploymentsEnabled: false
+      InstanceConfiguration:
+        Cpu: "1024"
+        Memory: "2048"
+        InstanceRoleArn: !GetAtt AppRunnerService1Role.Arn
+      NetworkConfiguration:
+        IngressConfiguration:
+          IsPubliclyAccessible: false
+        EgressConfiguration:
+          EgressType: VPC
+          VpcConnectorArn: !GetAtt AppRunnerServiceConnector.VpcConnectorArn
+      HealthCheckConfiguration:
+        Protocol: "TCP"
+        Path: "/"
+        Interval: 10
+        Timeout: 5
+        HealthyThreshold: 1
+        UnhealthyThreshold: 5
+
+  AppRunnerService1Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [tasks.apprunner.amazonaws.com]
+            Action: [sts:AssumeRole]
+      Path: /
+      Policies:
+        - PolicyName: AppRunnerService1Access
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Resource: "*"
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:BatchGetItem
+                  - dynamodb:Scan
+                  - dynamodb:Query
+                  - dynamodb:ConditionCheckItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:BatchWriteItem
+                  - dynamodb:DeleteItem
+
+  TestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+
+  TestLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs14.x
+      CodeUri: ./src/lambda/test-app-runner-private-service
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /test
+            Method: get
+            RestApiId:
+              Ref: TestApi
+      VpcConfig:
+        SubnetIds: !Ref SubnetIds
+        SecurityGroupIds:
+          - !Ref DefaultSecurityGroupId
+      Environment:
+        Variables:
+          APP_RUNNER_PRIVATE_SERVICE_HOSTNAME: !Sub "${AppRunnerService1VpcIngressConnection.DomainName}"
+          APP_RUNNER_PRIVATE_SERVICE_BASE_URL: !Sub https://${AppRunnerService1VpcIngressConnection.DomainName}
+          APP_RUNNER_PRIVATE_SERVICE_TEST_URL: !Sub "https://${AppRunnerService1VpcIngressConnection.DomainName}/api/environment"
+          
+
+  MyPrivateS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: 
+        Fn::Sub: 
+          - "${StackName}"
+          - StackName: !Ref "AWS::StackName"
+      AccessControl: Private
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      VersioningConfiguration:
+        Status: Enabled
+
+Outputs:
+  AppRunnerService1Url:
+    Description: private-endpoint-1-url
+    Value: !Sub https://${AppRunnerService1VpcIngressConnection.DomainName}
+
+  TestApiUrl:
+    Description: "API endpoint URL"
+    Value: !Sub "https://${TestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/test"
+
+  AppRunnerPrivateEndpointId:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Ref AppRunnerPrivateEndpoint
+
+  AppRunnerPrivateEndpointDnsEntries:
+    Description: "The DNS entries for the endpoint. Each entry is a combination of the hosted zone ID and the DNS name. The entries are ordered as follows: regional public DNS, zonal public DNS, private DNS, and wildcard DNS. This order is not enforced for AWS Marketplace services."
+    Value: !Join [",", !GetAtt AppRunnerPrivateEndpoint.DnsEntries]
+
+  AppRunnerPrivateEndpointNetworkInterfaceIds:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Join [",", !GetAtt AppRunnerPrivateEndpoint.NetworkInterfaceIds]
+
+  MyPrivateS3Bucket:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Ref MyPrivateS3Bucket
+
+
+  

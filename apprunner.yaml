@@ -1,0 +1,8 @@
+version: 1.0
+runtime: nodejs12
+build:
+  commands:
+    - npm install
+    - npm run build  # Remove this line if you don't have a build script
+run:
+  command: npm start
