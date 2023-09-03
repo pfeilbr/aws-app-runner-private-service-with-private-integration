@@ -21,7 +21,11 @@ Parameters:
     Type: AWS::EC2::SecurityGroup::Id
     Default: sg-012ca0fab7b700e95
 
-
+  # NOTE: you must manually create this in the App Runner Console | connected accounts section
+  AppRunnerCodeBasedService1ConnectionArn:
+    Description: The connection ARN for the App Runner repository connection (e.g. github, bitbucket, etc.)
+    Type: String
+    Default: arn:aws:apprunner:us-east-1:529276214230:connection/github-pfeilbr/80f11832d018483090b0b0f365c71ea5
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -64,6 +68,15 @@ Resources:
       ServiceArn: !GetAtt "AppRunnerService1.ServiceArn"
       VpcIngressConnectionName: "service-1-private-ingress-connection"
 
+  AAppRunnerCodeBasedService1VpcIngressConnection:
+    Type: AWS::AppRunner::VpcIngressConnection
+    Properties:
+      IngressVpcConfiguration:
+        VpcEndpointId: !Ref AppRunnerPrivateEndpoint
+        VpcId: !Ref PrivateVpcId
+      ServiceArn: !GetAtt "AppRunnerCodeBasedService1.ServiceArn"
+      VpcIngressConnectionName: "code-based-1-private-ingress-connection"
+
   #VPC Egress Connection creation
   AppRunnerServiceConnector:
     Type: AWS::AppRunner::VpcConnector
@@ -88,6 +101,43 @@ Resources:
                 Value: "1"
           ImageRepositoryType: "ECR_PUBLIC"
         AutoDeploymentsEnabled: false
+      InstanceConfiguration:
+        Cpu: "1024"
+        Memory: "2048"
+        InstanceRoleArn: !GetAtt AppRunnerService1Role.Arn
+      NetworkConfiguration:
+        IngressConfiguration:
+          IsPubliclyAccessible: false
+        EgressConfiguration:
+          EgressType: VPC
+          VpcConnectorArn: !GetAtt AppRunnerServiceConnector.VpcConnectorArn
+      HealthCheckConfiguration:
+        Protocol: "TCP"
+        Path: "/"
+        Interval: 10
+        Timeout: 5
+        HealthyThreshold: 1
+        UnhealthyThreshold: 5
+
+  AppRunnerCodeBasedService1:
+    Type: "AWS::AppRunner::Service"
+    Properties:
+      ServiceName: "code-based-private-endpoint-1"
+      SourceConfiguration:
+        AuthenticationConfiguration:
+          ConnectionArn: !Ref AppRunnerCodeBasedService1ConnectionArn
+        AutoDeploymentsEnabled: true
+        CodeRepository:
+          RepositoryUrl: https://github.com/pfeilbr/aws-app-runner-private-service-with-private-integration
+          SourceCodeVersion:
+            Type: BRANCH
+            Value: main
+          CodeConfiguration:
+            ConfigurationSource: REPOSITORY
+          # CodeConfigurationValues:
+          #   Runtime: NODEJS_12
+          #   BuildCommand: 'npm install'
+          #   StartCommand: 'npm start'
       InstanceConfiguration:
         Cpu: "1024"
         Memory: "2048"
