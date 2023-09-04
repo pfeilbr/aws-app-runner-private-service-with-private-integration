@@ -33,6 +33,8 @@ sam delete --no-prompts
 
 aws cloudformation delete-stack --stack-name $STACK_NAME
 
+aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
+
 docker build -t hello-world-express .
 docker run -p 8000:8000 hello-world-express
 docker tag hello-world-express:latest $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$STACK_NAME
