@@ -10,9 +10,24 @@
         "Description": "The DNS entries for the endpoint. Each entry is a combination of the hosted zone ID and the DNS name. The entries are ordered as follows: regional public DNS, zonal public DNS, private DNS, and wildcard DNS. This order is not enforced for AWS Marketplace services."
     },
     {
+        "OutputKey": "ECRRepositoryName",
+        "OutputValue": "aws-app-runner-private-service-with-private-integration",
+        "Description": "ECR Repository Name"
+    },
+    {
+        "OutputKey": "AppRunnerCodeBasedService1Url",
+        "OutputValue": "https://zijd9mbdvg.us-east-1.awsapprunner.com",
+        "Description": "code-based-private-endpoint-1-url"
+    },
+    {
         "OutputKey": "MyPrivateS3Bucket",
         "OutputValue": "aws-app-runner-private-service-with-private-integration",
         "Description": "API Gateway endpoint URL for Prod stage for Hello World function"
+    },
+    {
+        "OutputKey": "ECRRepositoryArn",
+        "OutputValue": "arn:aws:ecr:us-east-1:529276214230:repository/aws-app-runner-private-service-with-private-integration",
+        "Description": "ECR Repository ARN"
     },
     {
         "OutputKey": "TestApiUrl",
@@ -23,6 +38,11 @@
         "OutputKey": "AppRunnerPrivateEndpointNetworkInterfaceIds",
         "OutputValue": "eni-0272a7d9b676aae41,eni-0ea5d7b799ccd0fae",
         "Description": "API Gateway endpoint URL for Prod stage for Hello World function"
+    },
+    {
+        "OutputKey": "ECRRepositoryUri",
+        "OutputValue": "529276214230.dkr.ecr.us-east-1.amazonaws.com/aws-app-runner-private-service-with-private-integration",
+        "Description": "ECR Repository URI"
     },
     {
         "OutputKey": "AppRunnerPrivateEndpointId",

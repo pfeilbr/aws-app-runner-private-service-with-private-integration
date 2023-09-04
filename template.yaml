@@ -266,6 +266,19 @@ Outputs:
     Description: code-based-private-endpoint-1-url
     Value: !Sub https://${AppRunnerCodeBasedService1VpcIngressConnection.DomainName}
 
+  
+  ECRRepositoryName:
+    Description: ECR Repository Name
+    Value: !Ref ECRRepository
+
+  ECRRepositoryArn:
+    Description: ECR Repository ARN
+    Value: !GetAtt ECRRepository.Arn
+
+  ECRRepositoryUri:
+    Description: ECR Repository URI
+    Value: !GetAtt ECRRepository.RepositoryUri
+
   TestApiUrl:
     Description: "API endpoint URL"
     Value: !Sub "https://${TestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/test"
