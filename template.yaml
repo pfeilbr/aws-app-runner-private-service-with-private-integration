@@ -119,6 +119,40 @@ Resources:
         HealthyThreshold: 1
         UnhealthyThreshold: 5
 
+  AppRunnerImageBasedService1:
+    Type: "AWS::AppRunner::Service"
+    Properties:
+      ServiceName: "image-based-private-endpoint-1"
+      SourceConfiguration:
+        AuthenticationConfiguration:
+          AccessRoleArn: !GetAtt AppRunnerBuildRole.Arn
+        AutoDeploymentsEnabled: true      
+        ImageRepository:
+          ImageIdentifier: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${AWS::StackName}:latest"
+          ImageRepositoryType: ECR
+          ImageConfiguration:
+            Port: "8000"
+            RuntimeEnvironmentVariables:
+              - Name: "ENVIRONMENT"
+                Value: "1"
+      InstanceConfiguration:
+        Cpu: "1024"
+        Memory: "2048"
+        InstanceRoleArn: !GetAtt AppRunnerService1Role.Arn
+      NetworkConfiguration:
+        IngressConfiguration:
+          IsPubliclyAccessible: false
+        EgressConfiguration:
+          EgressType: VPC
+          VpcConnectorArn: !GetAtt AppRunnerServiceConnector.VpcConnectorArn
+      HealthCheckConfiguration:
+        Protocol: "TCP"
+        Path: "/"
+        Interval: 10
+        Timeout: 5
+        HealthyThreshold: 1
+        UnhealthyThreshold: 5
+
   AppRunnerCodeBasedService1:
     Type: "AWS::AppRunner::Service"
     Properties:

@@ -10,6 +10,7 @@ based on [KarlDeux/arps](https://github.com/KarlDeux/arps)
 export AWS_PROFILE="hub01-admin"
 export STACK_NAME=aws-app-runner-private-service-with-private-integration
 export REGION=us-east-1
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 
 sam build --use-container
 
@@ -38,6 +39,13 @@ aws cloudformation delete-stack --stack-name $STACK_NAME
 docker build -t hello-world-express .
 docker run -p 8000:8000 hello-world-express
 
+docker tag hello-world-express:latest $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$STACK_NAME
+
+docker push $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$STACK_NAME
+
+docker pull "${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${STACK_NAME}:latest"
+
+
 # deployment and event logs
 /aws/apprunner/code-based-private-endpoint-1/58b5e70db6aa4481b6cf42ca0c38b5f9/service
 
@@ -48,6 +56,7 @@ docker run -p 8000:8000 hello-world-express
 
 ## TODO
 
+- continue with finishing AppRunnerImageBasedService1 resource
 - test via cloud shell (runs in VPC)
 - private service only accessible via VPC
 - private integration only accessible via VPC. e.g. RDS DB in private subnet
