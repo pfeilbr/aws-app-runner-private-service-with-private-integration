@@ -33,6 +33,7 @@ sam delete --no-prompts
 
 aws cloudformation delete-stack --stack-name $STACK_NAME
 
+# login to ecr from docker
 aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
 
 docker build -t hello-world-express .
@@ -54,13 +55,13 @@ watch curl https://r4d8inqs3m.execute-api.us-east-1.amazonaws.com/Prod/test
 
 ```
 
+- log types - event logs (`/aws/apprunner/code-based-private-endpoint-1/ba93db338128426481f912edc4d493c1/service/events`), deployment logs (`/aws/apprunner/code-based-private-endpoint-1/ba93db338128426481f912edc4d493c1/service/deployment/<deployment_id>`), application logs
+
 ## TODO
 
-- continue with finishing AppRunnerImageBasedService1 resource
-- test via cloud shell (runs in VPC)
 - private service only accessible via VPC
 - private integration only accessible via VPC. e.g. RDS DB in private subnet
-- apig -> lambda with VPC access/config to test private app runner service.  this is a lot easier than running ec2 in a VPC
+- testing - apig -> lambda with VPC access/config to test private app runner service.  this is a lot easier than running ec2 in a VPC
 
 ## screenshots
 
@@ -77,3 +78,15 @@ watch curl https://r4d8inqs3m.execute-api.us-east-1.amazonaws.com/Prod/test
 ## Resources
 
 - [KarlDeux/arps](https://github.com/KarlDeux/arps)
+- [Image-based service](https://docs.aws.amazon.com/apprunner/latest/dg/service-source-image.html) - container image (docker)
+- [Code-based service](https://docs.aws.amazon.com/apprunner/latest/dg/service-source-code.html) - source code and a supported runtime ([managed platforms](https://docs.aws.amazon.com/apprunner/latest/dg/service-source-code.html#service-source-code.managed-platforms).  e.g. python, node.js, java, .net, php, ruby, go)
+- [configuration file](https://docs.aws.amazon.com/apprunner/latest/dg/config-file.html) ([`apprunner.yaml`](https://docs.aws.amazon.com/apprunner/latest/dg/config-file-examples.html)).
+- [Enabling Private endpoint for incoming traffic](https://docs.aws.amazon.com/apprunner/latest/dg/network-pl.html)
+- [AWS::AppRunner::VpcIngressConnection](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apprunner-vpcingressconnection.html) - associate your App Runner service to an Amazon VPC endpoint
+- [AWS::AppRunner::VpcIngressConnection.DomainName](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apprunner-vpcingressconnection.html#DomainName-fn::getatt). build URL with `!Sub https://${AppRunnerService1VpcIngressConnection.DomainName}`
+- [AWS::EC2::VPCEndpoint](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html) with `ServiceName: !Sub "com.amazonaws.${AWS::Region}.apprunner.requests"`
+- see [KarlDeux/arps/template.yaml](https://github.com/KarlDeux/arps/blob/master/template.yaml) for full example.
+- [Enabling VPC access for outgoing traffic](https://docs.aws.amazon.com/apprunner/latest/dg/network-vpc.html)
+- [AWS::AppRunner::VpcConnector](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apprunner-vpcconnector.html)
+- [Using Amazon ECR with the AWS CLI](https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-cli.html)
+- [How do I connect to my Amazon RDS for PostgreSQL or Amazon Aurora PostgreSQL using IAM authentication?](https://repost.aws/knowledge-center/rds-postgresql-connect-using-iam)
