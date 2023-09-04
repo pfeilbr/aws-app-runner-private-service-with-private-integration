@@ -23,9 +23,6 @@ aws cloudformation describe-stacks \
   --query 'Stacks[0].Outputs' \
   > stack-outputs.json
 
-# test the enpoint.  this public apig endpoint calls a lambda fn in vpc that calls a private app runner service
-watch curl https://r4d8inqs3m.execute-api.us-east-1.amazonaws.com/Prod/test
-
 # get default vpc id
 export DEFAULT_VPC_ID=$(aws ec2 describe-vpcs --region $REGION  --filters "Name=isDefault,Values=true" --query "Vpcs[0].VpcId" --output text)
 
@@ -38,11 +35,8 @@ aws cloudformation delete-stack --stack-name $STACK_NAME
 
 docker build -t hello-world-express .
 docker run -p 8000:8000 hello-world-express
-
 docker tag hello-world-express:latest $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$STACK_NAME
-
 docker push $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$STACK_NAME
-
 docker pull "${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${STACK_NAME}:latest"
 
 
@@ -51,6 +45,10 @@ docker pull "${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${STACK_NAME}:lat
 
 # application logs
 /aws/apprunner/private-endpoint-1/cc0078056c7d48ab9b434dfcadc796f3/application
+
+# test the enpoint.  this public apig endpoint calls a lambda fn in vpc that calls private app runner services
+watch curl https://r4d8inqs3m.execute-api.us-east-1.amazonaws.com/Prod/test
+
 
 ```
 

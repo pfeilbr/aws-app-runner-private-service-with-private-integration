@@ -14,7 +14,11 @@ const testURL = async (url) => {
 
 exports.handler = async (event) => {
     let responseMessage = 'Hello, World!';
-    const urls = [`${process.env.APP_RUNNER_PRIVATE_SERVICE_TEST_URL}`, `${process.env.APP_RUNNER_CODE_BASED_PRIVATE_SERVICE_BASE_URL}`];
+    const urls = [
+        `${process.env.APP_RUNNER_PRIVATE_SERVICE_TEST_URL}`,
+        `${process.env.APP_RUNNER_CODE_BASED_PRIVATE_SERVICE_BASE_URL}`,
+        `${process.env.APP_RUNNER_IMAGE_BASED_PRIVATE_SERVICE_BASE_URL}`
+    ];
     const responses = await Promise.all(urls.map(url => testURL(url)));
     const response = {
         statusCode: 200,

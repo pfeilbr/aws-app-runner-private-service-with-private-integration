@@ -77,6 +77,15 @@ Resources:
       ServiceArn: !GetAtt "AppRunnerCodeBasedService1.ServiceArn"
       VpcIngressConnectionName: "code-based-1-private-ingress-connection"
 
+  AppRunnerImageBasedService1VpcIngressConnection:
+    Type: AWS::AppRunner::VpcIngressConnection
+    Properties:
+      IngressVpcConfiguration:
+        VpcEndpointId: !Ref AppRunnerPrivateEndpoint
+        VpcId: !Ref PrivateVpcId
+      ServiceArn: !GetAtt "AppRunnerImageBasedService1.ServiceArn"
+      VpcIngressConnectionName: "image-based-1-private-ingress-connection"
+
   #VPC Egress Connection creation
   AppRunnerServiceConnector:
     Type: AWS::AppRunner::VpcConnector
@@ -274,8 +283,8 @@ Resources:
           APP_RUNNER_PRIVATE_SERVICE_BASE_URL: !Sub https://${AppRunnerService1VpcIngressConnection.DomainName}
           APP_RUNNER_PRIVATE_SERVICE_TEST_URL: !Sub "https://${AppRunnerService1VpcIngressConnection.DomainName}/api/environment"
           APP_RUNNER_CODE_BASED_PRIVATE_SERVICE_BASE_URL: !Sub https://${AppRunnerCodeBasedService1VpcIngressConnection.DomainName}
+          APP_RUNNER_IMAGE_BASED_PRIVATE_SERVICE_BASE_URL: !Sub https://${AppRunnerImageBasedService1VpcIngressConnection.DomainName}
           
-
   MyPrivateS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -300,6 +309,9 @@ Outputs:
     Description: code-based-private-endpoint-1-url
     Value: !Sub https://${AppRunnerCodeBasedService1VpcIngressConnection.DomainName}
 
+  AppRunnerImageBasedService1Url:
+    Description: image-based-private-endpoint-1-url
+    Value: !Sub https://${AppRunnerImageBasedService1VpcIngressConnection.DomainName}
   
   ECRRepositoryName:
     Description: ECR Repository Name
