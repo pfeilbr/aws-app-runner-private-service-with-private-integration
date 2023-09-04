@@ -13,3 +13,5 @@ run:
   env:
     - name: MY_VAR_EXAMPLE
       value: "example"  
+    - name: ENVIRONMENT
+      value: "code-based-private-endpoint-1"  
