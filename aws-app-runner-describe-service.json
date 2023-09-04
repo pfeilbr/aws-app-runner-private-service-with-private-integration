@@ -1,0 +1,56 @@
+{
+    "Service": {
+        "ServiceName": "code-based-private-endpoint-1",
+        "ServiceId": "ba93db338128426481f912edc4d493c1",
+        "ServiceArn": "arn:aws:apprunner:us-east-1:529276214230:service/code-based-private-endpoint-1/ba93db338128426481f912edc4d493c1",
+        "CreatedAt": "2023-09-03T19:00:36-04:00",
+        "UpdatedAt": "2023-09-03T19:00:36-04:00",
+        "Status": "RUNNING",
+        "SourceConfiguration": {
+            "CodeRepository": {
+                "RepositoryUrl": "https://github.com/pfeilbr/aws-app-runner-private-service-with-private-integration",
+                "SourceCodeVersion": {
+                    "Type": "BRANCH",
+                    "Value": "master"
+                },
+                "CodeConfiguration": {
+                    "ConfigurationSource": "REPOSITORY"
+                }
+            },
+            "AutoDeploymentsEnabled": true,
+            "AuthenticationConfiguration": {
+                "ConnectionArn": "arn:aws:apprunner:us-east-1:529276214230:connection/github-pfeilbr/80f11832d018483090b0b0f365c71ea5"
+            }
+        },
+        "InstanceConfiguration": {
+            "Cpu": "1024",
+            "Memory": "2048",
+            "InstanceRoleArn": "arn:aws:iam::529276214230:role/aws-app-runner-private-servi-AppRunnerService1Role-VDPJ1MZOPZXC"
+        },
+        "HealthCheckConfiguration": {
+            "Protocol": "TCP",
+            "Path": "/",
+            "Interval": 10,
+            "Timeout": 5,
+            "HealthyThreshold": 1,
+            "UnhealthyThreshold": 5
+        },
+        "AutoScalingConfigurationSummary": {
+            "AutoScalingConfigurationArn": "arn:aws:apprunner:us-east-1:529276214230:autoscalingconfiguration/DefaultConfiguration/1/00000000000000000000000000000001",
+            "AutoScalingConfigurationName": "DefaultConfiguration",
+            "AutoScalingConfigurationRevision": 1
+        },
+        "NetworkConfiguration": {
+            "EgressConfiguration": {
+                "EgressType": "VPC",
+                "VpcConnectorArn": "arn:aws:apprunner:us-east-1:529276214230:vpcconnector/vpc-connector-apprunner/1/3cb1d8c4a7264d5198c2796707278953"
+            },
+            "IngressConfiguration": {
+                "IsPubliclyAccessible": false
+            }
+        },
+        "ObservabilityConfiguration": {
+            "ObservabilityEnabled": false
+        }
+    }
+}
