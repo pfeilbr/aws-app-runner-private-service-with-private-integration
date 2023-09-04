@@ -305,14 +305,38 @@ Outputs:
     Description: private-endpoint-1-url
     Value: !Sub https://${AppRunnerService1VpcIngressConnection.DomainName}
 
+  AppRunnerService1Arn:
+    Description: private-endpoint-1-arn
+    Value: !GetAtt AppRunnerService1.ServiceArn
+
+  AppRunnerService1Id:
+    Description: private-endpoint-1-id
+    Value: !GetAtt AppRunnerService1.ServiceId
+
   AppRunnerCodeBasedService1Url:
     Description: code-based-private-endpoint-1-url
     Value: !Sub https://${AppRunnerCodeBasedService1VpcIngressConnection.DomainName}
+
+  AppRunnerCodeBasedService1Arn:
+    Description: code-based-private-endpoint-1-arn
+    Value: !GetAtt AppRunnerCodeBasedService1.ServiceArn
+
+  AppRunnerCodeBasedService1Id:
+    Description: code-based-private-endpoint-1-id
+    Value: !GetAtt AppRunnerCodeBasedService1.ServiceId
 
   AppRunnerImageBasedService1Url:
     Description: image-based-private-endpoint-1-url
     Value: !Sub https://${AppRunnerImageBasedService1VpcIngressConnection.DomainName}
   
+  AppRunnerImageBasedService1Arn:
+    Description: image-based-private-endpoint-1-arn
+    Value: !GetAtt AppRunnerImageBasedService1.ServiceArn
+
+  AppRunnerImageBasedService1Id:
+    Description: image-based-private-endpoint-1-id
+    Value: !GetAtt AppRunnerImageBasedService1.ServiceId
+
   ECRRepositoryName:
     Description: ECR Repository Name
     Value: !Ref ECRRepository

@@ -1,0 +1,28 @@
+{
+    "ServiceSummaryList": [
+        {
+            "ServiceName": "image-based-private-endpoint-1",
+            "ServiceId": "17260010a50c4619b838dabf6d54464d",
+            "ServiceArn": "arn:aws:apprunner:us-east-1:529276214230:service/image-based-private-endpoint-1/17260010a50c4619b838dabf6d54464d",
+            "CreatedAt": "2023-09-04T11:07:49-04:00",
+            "UpdatedAt": "2023-09-04T11:07:49-04:00",
+            "Status": "RUNNING"
+        },
+        {
+            "ServiceName": "code-based-private-endpoint-1",
+            "ServiceId": "ba93db338128426481f912edc4d493c1",
+            "ServiceArn": "arn:aws:apprunner:us-east-1:529276214230:service/code-based-private-endpoint-1/ba93db338128426481f912edc4d493c1",
+            "CreatedAt": "2023-09-03T19:00:36-04:00",
+            "UpdatedAt": "2023-09-03T19:00:36-04:00",
+            "Status": "RUNNING"
+        },
+        {
+            "ServiceName": "private-endpoint-1",
+            "ServiceId": "cc0078056c7d48ab9b434dfcadc796f3",
+            "ServiceArn": "arn:aws:apprunner:us-east-1:529276214230:service/private-endpoint-1/cc0078056c7d48ab9b434dfcadc796f3",
+            "CreatedAt": "2023-09-03T16:55:14-04:00",
+            "UpdatedAt": "2023-09-03T16:55:14-04:00",
+            "Status": "RUNNING"
+        }
+    ]
+}

@@ -1,8 +1,13 @@
 [
     {
-        "OutputKey": "AppRunnerService1Url",
-        "OutputValue": "https://zbz6kpdkxx.us-east-1.awsapprunner.com",
-        "Description": "private-endpoint-1-url"
+        "OutputKey": "AppRunnerService1Arn",
+        "OutputValue": "arn:aws:apprunner:us-east-1:529276214230:service/private-endpoint-1/cc0078056c7d48ab9b434dfcadc796f3",
+        "Description": "private-endpoint-1-arn"
+    },
+    {
+        "OutputKey": "AppRunnerImageBasedService1Id",
+        "OutputValue": "17260010a50c4619b838dabf6d54464d",
+        "Description": "image-based-private-endpoint-1-id"
     },
     {
         "OutputKey": "AppRunnerPrivateEndpointDnsEntries",
@@ -10,9 +15,9 @@
         "Description": "The DNS entries for the endpoint. Each entry is a combination of the hosted zone ID and the DNS name. The entries are ordered as follows: regional public DNS, zonal public DNS, private DNS, and wildcard DNS. This order is not enforced for AWS Marketplace services."
     },
     {
-        "OutputKey": "ECRRepositoryName",
-        "OutputValue": "aws-app-runner-private-service-with-private-integration",
-        "Description": "ECR Repository Name"
+        "OutputKey": "AppRunnerImageBasedService1Arn",
+        "OutputValue": "arn:aws:apprunner:us-east-1:529276214230:service/image-based-private-endpoint-1/17260010a50c4619b838dabf6d54464d",
+        "Description": "image-based-private-endpoint-1-arn"
     },
     {
         "OutputKey": "AppRunnerCodeBasedService1Url",
@@ -28,6 +33,36 @@
         "OutputKey": "ECRRepositoryArn",
         "OutputValue": "arn:aws:ecr:us-east-1:529276214230:repository/aws-app-runner-private-service-with-private-integration",
         "Description": "ECR Repository ARN"
+    },
+    {
+        "OutputKey": "AppRunnerCodeBasedService1Id",
+        "OutputValue": "ba93db338128426481f912edc4d493c1",
+        "Description": "code-based-private-endpoint-1-id"
+    },
+    {
+        "OutputKey": "AppRunnerService1Url",
+        "OutputValue": "https://zbz6kpdkxx.us-east-1.awsapprunner.com",
+        "Description": "private-endpoint-1-url"
+    },
+    {
+        "OutputKey": "AppRunnerImageBasedService1Url",
+        "OutputValue": "https://krdtgh6bng.us-east-1.awsapprunner.com",
+        "Description": "image-based-private-endpoint-1-url"
+    },
+    {
+        "OutputKey": "ECRRepositoryName",
+        "OutputValue": "aws-app-runner-private-service-with-private-integration",
+        "Description": "ECR Repository Name"
+    },
+    {
+        "OutputKey": "AppRunnerCodeBasedService1Arn",
+        "OutputValue": "arn:aws:apprunner:us-east-1:529276214230:service/code-based-private-endpoint-1/ba93db338128426481f912edc4d493c1",
+        "Description": "code-based-private-endpoint-1-arn"
+    },
+    {
+        "OutputKey": "AppRunnerService1Id",
+        "OutputValue": "cc0078056c7d48ab9b434dfcadc796f3",
+        "Description": "private-endpoint-1-id"
     },
     {
         "OutputKey": "TestApiUrl",
