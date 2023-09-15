@@ -52,6 +52,26 @@ docker pull "${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${STACK_NAME}:lat
 # test the enpoint.  this public apig endpoint calls a lambda fn in vpc that calls private app runner services
 watch curl https://r4d8inqs3m.execute-api.us-east-1.amazonaws.com/Prod/test
 
+# pause all services
+json_data=$(cat aws-app-runner-list-services.json)
+
+# Get the length of the array within the "ServiceSummaryList" property
+length=$(echo $json_data | jq '.ServiceSummaryList | length')
+
+# Loop over each element in the array
+for (( i=0; i<$length; i++ )); do
+  # Extract the object at index $i within the "ServiceSummaryList" array
+  object=$(echo $json_data | jq -c ".ServiceSummaryList[$i]")
+
+  # Extract the 'ServiceName' field from the object
+  service_name=$(echo $object | jq -r '.ServiceName')
+  service_id=$(echo $object | jq -r '.ServiceId')
+  service_arn=$(echo $object | jq -r '.ServiceArn')
+
+  # Print out the ServiceName
+  echo "Pausing ServiceName: $service_name"
+  aws apprunner pause-service --service-arn "${service_arn}"
+done
 
 ```
 
